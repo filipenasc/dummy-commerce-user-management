@@ -39,7 +39,7 @@ export class User {
   public email: string;
   public password: string;
   public refreshToken?: string;
-  public confirmed?: boolean;
+  public confirmedAt?: Date;
 
   constructor(props: Omit<User, 'id'>, id?: string, refreshToken?: string) {
     Object.assign(this, props);

@@ -12,7 +12,7 @@ export class GenerateRefreshTokenController {
       const user = await this.usersRepository.findByRefreshToken(refreshToken);
 
       if (user) {
-        const accessToken = this.generateTokenService.execute(user);
+        const accessToken = this.generateTokenService.execute(user.id);
 
         const responsePayload = {
           username: user.username,

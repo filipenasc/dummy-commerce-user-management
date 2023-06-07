@@ -5,13 +5,15 @@ export class SignupController {
   constructor(private createUserService: CreateUserService) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    const { username, password, email } = request.body;
+    const { username, password, email, firstName, lastName } = request.body;
 
     try {
       await this.createUserService.execute({
         username,
         email,
         password,
+        firstName,
+        lastName
       });
 
       return response.status(201).send();

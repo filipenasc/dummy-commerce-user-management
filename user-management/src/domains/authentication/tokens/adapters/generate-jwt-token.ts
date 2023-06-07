@@ -3,15 +3,13 @@ import { GenerateTokenInterface, GenerateTokenOptionsInterface } from '../../gen
 import jwt from 'jsonwebtoken';
 
 export class GenerateJWTToken implements GenerateTokenInterface {
-  generate(user: User, options?: GenerateTokenOptionsInterface): string {
-
+  generate(userId: string, options?: GenerateTokenOptionsInterface): string {
     return jwt.sign(
       {
-        id: user.id,
-        email: user.email,
+        id: userId,
       },
       process.env.AUTH_SECRET_KEY,
-      { expiresIn: options?.expiresIn }
+      { ...options }
     );
   }
 }

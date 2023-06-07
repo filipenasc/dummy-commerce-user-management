@@ -1,34 +1,36 @@
-import { User } from "../../entities/user";
+import { User, UserModel, PersistedUserModel } from "../../models/user";
+import { User as UserEntity } from "../../entities/user";
 import { UsersRepositoryInterface } from "../users-repository-interface";
 
 export class MongoUsersRepository implements UsersRepositoryInterface {
-  private users: User[] = [];
+  constructor(private users = User) {}
 
-  async find(id: string): Promise<User> {
-    return this.users.find(user => user.id === id);
+  async findById(id: string): Promise<UserEntity> {
+    return await this.users.findById(id);
   }
 
-  async findByCredentials(username: string, password: string): Promise<User> {
-    return this.users.find(user => user.username === username && user.password === password);
+  async findByCredentials(username: string, password: string): Promise<UserEntity> {
+    return await this.users.findOne({ username, password });
   }
 
-  async findByUsername(username: string): Promise<User> {
-    return this.users.find(user => user.username === username);
+  async findByUsername(username: string): Promise<UserEntity> {
+    return await this.users.findOne({ username });
   }
 
-  async findByRefreshToken(refreshToken: string): Promise<User> {
-    return this.users.find(user => user.refreshToken === refreshToken);
+  async findByRefreshToken(refreshToken: string): Promise<UserEntity> {
+    return this.users.findOne({ refreshToken });
   }
 
-  async create(user: User): Promise<void> {
-    this.users.push(user);
+  async create(data: UserModel): Promise<PersistedUserModel> {
+    const result = await this.users.create(data);
+    return result.toJSON();
   }
 
   async confirmEmail(id: string): Promise<void> {
-    this.users.forEach(user => {
-      if (user.id === id) {
-        user.confirmed = true;
-      }
-    });
+    await this.users.findByIdAndUpdate(id, { $set: { confirmedAt: new Date() } });
+  }
+
+  async findByIdAndUpdate(id: string, data: any): Promise<void> {
+    await this.users.findByIdAndUpdate(id, { $set: data });
   }
 }

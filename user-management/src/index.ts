@@ -1,10 +1,14 @@
+require('dotenv').config();
+
 import express from 'express';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { router } from './routes';
 
-require('dotenv').config();
-
 const app = express();
+
+mongoose.connect(process.env.MONGODB_CONNECTION);
+
 // Middleware to parse JSON body
 app.use(express.json());
 app.use(router);

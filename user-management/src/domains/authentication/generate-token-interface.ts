@@ -5,5 +5,5 @@ export interface GenerateTokenOptionsInterface {
 }
 
 export interface GenerateTokenInterface {
-  generate(user: User, options?: GenerateTokenOptionsInterface): string;
+  generate(userId: string, options?: GenerateTokenOptionsInterface): string;
 }

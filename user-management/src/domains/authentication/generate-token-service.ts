@@ -4,7 +4,7 @@ import { User } from '../../entities/user';
 export class GenerateTokenService {
   constructor(private tokenGenerator: GenerateTokenInterface) {}
 
-  execute(user: User, options?: GenerateTokenOptionsInterface): string {
-    return this.tokenGenerator.generate(user, options);
+  execute(userId: string, options?: GenerateTokenOptionsInterface): string {
+    return this.tokenGenerator.generate(userId, options);
   }
 }

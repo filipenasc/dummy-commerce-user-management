@@ -17,7 +17,7 @@ router.post('/api/users', (req, res) => {
   return createUserController.handle(req, res);
 });
 
-router.post('/confirmation/:confirmationCode', (req, res) => {
+router.get('/confirmation/:confirmationCode', (req, res) => {
   return signupConfirmationController.handle(req, res);
 });
 
