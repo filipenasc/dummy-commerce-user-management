@@ -1,4 +1,4 @@
-import { MongoUsersRepository } from "../../repositories/users-repository/mongo-users-repository";
+import { MongoUsersRepository } from "../users/repositories/mongo-users-repository";
 import { SignupConfirmationController } from "./signup-confirmation-controller";
 import { SignupConfirmationService } from "./signup-confirmation-service";
 

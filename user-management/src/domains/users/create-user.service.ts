@@ -1,9 +1,9 @@
 import { encryptPassword } from '../../lib/passwordHashing';
-import { GenerateTokenInterface } from '../../domains/authentication/generate-token-interface';
-import { EmailProviderInterface } from '../../domains/email/email-provider-interface';
+import { GenerateTokenInterface } from '../tokens/generate-token.interface';
+import { EmailProviderInterface } from '../email/email-provider.interface';
 import { User } from '../../entities/user';
-import { UsersRepositoryInterface } from '../../repositories/users-repository-interface';
-import { CreateUserDTO } from './create-user-dto';
+import { UsersRepositoryInterface } from './repositories/users-repository.interface';
+import { CreateUserDTO } from './create-user.dto';
 
 export class CreateUserService {
   constructor(private usersRepository: UsersRepositoryInterface, private mailProvider: EmailProviderInterface, private tokenGenerator: GenerateTokenInterface) {}
@@ -16,7 +16,6 @@ export class CreateUserService {
     }
 
     const encryptedPassword = await encryptPassword(data.password);
-    console.log(encryptedPassword)
     const user = await this.usersRepository.create({
       ...data,
       password: encryptedPassword,

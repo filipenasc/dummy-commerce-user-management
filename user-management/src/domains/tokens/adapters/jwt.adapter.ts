@@ -1,5 +1,5 @@
-import { User } from '../../../../entities/user';
-import { GenerateTokenInterface, GenerateTokenOptionsInterface } from '../../generate-token-interface';
+import { User } from '../../../entities/user';
+import { GenerateTokenInterface, GenerateTokenOptionsInterface } from '../generate-token.interface';
 import jwt from 'jsonwebtoken';
 
 export class GenerateJWTToken implements GenerateTokenInterface {

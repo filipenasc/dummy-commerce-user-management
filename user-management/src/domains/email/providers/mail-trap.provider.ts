@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { EmailMessageInterface, EmailProviderInterface } from "../email-provider-interface";
+import { EmailMessageInterface, EmailProviderInterface } from "../email-provider.interface";
 
 export class MailTrapProvider implements EmailProviderInterface {
   private transporter;

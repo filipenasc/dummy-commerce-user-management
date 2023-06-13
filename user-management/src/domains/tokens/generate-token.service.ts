@@ -1,4 +1,4 @@
-import { GenerateTokenInterface, GenerateTokenOptionsInterface } from './generate-token-interface';
+import { GenerateTokenInterface, GenerateTokenOptionsInterface } from './generate-token.interface';
 import { User } from '../../entities/user';
 
 export class GenerateTokenService {

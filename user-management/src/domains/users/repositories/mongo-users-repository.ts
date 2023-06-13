@@ -1,6 +1,6 @@
-import { User, UserModel, PersistedUserModel } from "../../models/user";
-import { User as UserEntity } from "../../entities/user";
-import { UsersRepositoryInterface } from "../users-repository-interface";
+import { User, UserModel, PersistedUserModel } from "../user.model";
+import { User as UserEntity } from "../../../entities/user";
+import { UsersRepositoryInterface } from "./users-repository.interface";
 
 export class MongoUsersRepository implements UsersRepositoryInterface {
   constructor(private users = User) {}

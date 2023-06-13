@@ -1,5 +1,5 @@
-import { UserModel, PersistedUserModel } from "../models/user";
-import { User } from "../entities/user";
+import { UserModel, PersistedUserModel } from "../user.model";
+import { User } from "../../../entities/user";
 
 export interface UsersRepositoryInterface {
   findById(id: string): Promise<User>;

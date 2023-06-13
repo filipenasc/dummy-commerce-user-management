@@ -1,23 +1,24 @@
+import { Request, Response } from 'express';
 import { signupConfirmationController } from './domains/signup-confirmation';
-import { generateTokenController, generateRefreshTokenController } from './domains/authentication';
-import { createUserController } from './domains/signup';
+import { tokensController } from './domains/tokens';
+import { usersController } from './domains/users';
 import { Router } from 'express';
 
 const router = Router();
 
-router.post('/api/login', (req, res) => {
-  return generateTokenController.handle(req, res);
+router.post('/api/login', (req: Request, res: Response) => {
+  return tokensController.generateToken(req, res);
 });
 
-router.post('/api/refresh', (req, res) => {
-  return generateRefreshTokenController.handle(req, res);
+router.post('/api/refresh', (req: Request, res: Response) => {
+  return tokensController.refreshToken(req, res);
 });
 
-router.post('/api/users', (req, res) => {
-  return createUserController.handle(req, res);
+router.post('/api/users', (req: Request, res: Response) => {
+  return usersController.create(req, res);
 });
 
-router.get('/confirmation/:confirmationCode', (req, res) => {
+router.get('/confirmation/:confirmationCode', (req: Request, res: Response) => {
   return signupConfirmationController.handle(req, res);
 });
 

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { CreateUserService } from "./create-user-service";
+import { CreateUserService } from "./create-user.service";
 
-export class SignupController {
+export class UsersController {
   constructor(private createUserService: CreateUserService) {}
 
-  async handle(request: Request, response: Response): Promise<Response> {
+  async create(request: Request, response: Response): Promise<Response> {
     const { username, password, email, firstName, lastName } = request.body;
 
     try {

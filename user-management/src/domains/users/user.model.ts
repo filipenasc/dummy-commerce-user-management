@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const { Schema, Model } = mongoose;
+const { Schema } = mongoose;
 
 export interface UserModel {
   firstName: string;

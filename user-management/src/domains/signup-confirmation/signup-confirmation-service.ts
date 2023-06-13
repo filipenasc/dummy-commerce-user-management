@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { UsersRepositoryInterface } from "../../repositories/users-repository-interface";
+import { UsersRepositoryInterface } from "../users/repositories/users-repository.interface";
 
 export class SignupConfirmationService {
   constructor(private usersRepository: UsersRepositoryInterface) {}
