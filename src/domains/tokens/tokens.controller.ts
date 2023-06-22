@@ -13,7 +13,7 @@ export class TokensController {
       const user = await this.usersRepository.findByRefreshToken(refreshToken);
 
       if (user) {
-        const accessToken = this.generateTokenService.execute(user.id);
+        const accessToken = this.generateTokenService.execute(user.id, { expiresIn: '30s' });
 
         const responsePayload = {
           username: user.username,
@@ -46,7 +46,7 @@ export class TokensController {
       if (user && comparePassword(password, user.password)) {
         const accessToken = this.generateTokenService.execute(user.id, { expiresIn: '30s' });
         const refreshToken = this.generateTokenService.execute(user.id);
-
+        console.log({ accessToken })
         await this.usersRepository.findByIdAndUpdate(user.id, { refreshToken });
 
         const responsePayload = {
