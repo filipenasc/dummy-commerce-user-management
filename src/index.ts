@@ -8,8 +8,10 @@ import { router } from './routes';
 
 const app = express();
 
+const port = parseInt(process.env.PORT) || 8080;
+
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: '*'
 }));
 
 mongoose.connect(process.env.MONGODB_CONNECTION);
@@ -18,6 +20,6 @@ mongoose.connect(process.env.MONGODB_CONNECTION);
 app.use(express.json());
 app.use(router);
 
-app.listen(4000, () => {
-  console.log(`Listening on port 4000`);
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 })
