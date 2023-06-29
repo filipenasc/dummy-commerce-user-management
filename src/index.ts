@@ -4,10 +4,14 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import { router } from './routes';
+import mongoose from 'mongoose';
 
-const app = express();
+export const app = express();
+
+async function setupDatabase(connection: string): Promise<void> {
+  await mongoose.connect(connection);
+}
 
 const port = process.env.PORT || 8080;
 
@@ -15,13 +19,11 @@ app.use(cors({
   origin: '*'
 }));
 
-const DB_CONNECTION = process.env.MONGODB_CONNECTION || 'mongodb://localhost:27017/user-management'
-
-mongoose.connect(DB_CONNECTION);
+setupDatabase(process.env.MONGODB_CONNECTION || 'mongodb://localhost:27017/user-management-test');
 
 app.use(express.json());
 app.use(router);
 
-app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 })
