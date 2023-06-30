@@ -1,21 +1,17 @@
 import { Request, Response } from 'express';
 // import { signupConfirmationController } from './domains/signup-confirmation';
-import { usersController } from './domains/tokens';
 import { Router } from 'express';
-import { AuthController } from './controllers/auth';
+import { AuthController } from '@src/controllers/auth';
+import { UsersController } from '@src/controllers/users';
 
 const router = Router();
 
 router.post('/users', (req: Request, res: Response) => {
-  return usersController.create(req, res);
+  return new UsersController().create(req, res);
 });
 
 router.post('/oauth/token', (req: Request, res: Response) => {
   return new AuthController().token(req, res);
-});
-
-router.post('/users/refresh-token', (req: Request, res: Response) => {
-  return usersController.refreshToken(req, res);
 });
 
 // router.post('/api/refresh', (req: Request, res: Response) => {
