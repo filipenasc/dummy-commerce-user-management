@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 // import { signupConfirmationController } from './domains/signup-confirmation';
 import { usersController } from './domains/tokens';
 import { Router } from 'express';
+import { AuthController } from './controllers/auth';
 
 const router = Router();
 
@@ -9,8 +10,8 @@ router.post('/users', (req: Request, res: Response) => {
   return usersController.create(req, res);
 });
 
-router.post('/users/authenticate', (req: Request, res: Response) => {
-  return usersController.authenticate(req, res);
+router.post('/oauth/token', (req: Request, res: Response) => {
+  return new AuthController().token(req, res);
 });
 
 router.post('/users/refresh-token', (req: Request, res: Response) => {

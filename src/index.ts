@@ -19,6 +19,10 @@ app.use(cors({
   origin: '*'
 }));
 
+app.use(express.urlencoded({
+  extended: true
+}));
+
 setupDatabase(process.env.MONGODB_CONNECTION || 'mongodb://localhost:27017/user-management-test');
 
 app.use(express.json());

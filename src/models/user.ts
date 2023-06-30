@@ -1,4 +1,4 @@
-import { Auth } from "@src/services/auth";
+import { Password } from "@src/services/password";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -36,14 +36,9 @@ const schema = new Schema(
 );
 
 schema.pre('save', async function (): Promise<void> {
-  if (!this.password || !this.isModified('password')) {
-    return;
-  }
-
   try {
-    this.password = await Auth.hashPassword(this.password);
-    if (!this.refreshToken) {
-      this.refreshToken = Auth.generateToken({ email: this.email });
+    if (!!this.password && this.isModified('password')) {
+      this.password = await Password.hash(this.password);
     }
   } catch (error) {
     console.error(error);
