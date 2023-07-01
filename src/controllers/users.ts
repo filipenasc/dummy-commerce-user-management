@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { User, UserModel } from '@src/models/user';
+import { User } from '@src/models/user';
 import { Auth } from '@src/services/auth';
-import { EmailProviderInterface, EmailService } from '@src/services/email';
 import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 
 export interface UserCredentialsRequest {

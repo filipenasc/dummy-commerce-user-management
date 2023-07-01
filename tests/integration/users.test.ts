@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { app, server } from '@src/index';
-import { User, UserModel } from '@src/models/user';
+import { User } from '@src/models/user';
 import { Auth } from '@src/services/auth';
 import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 import { connection } from 'mongoose';

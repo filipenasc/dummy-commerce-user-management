@@ -1,5 +1,4 @@
-import { UserModel } from "@src/models";
-import { EmailProviderInterface, EmailService } from "../email";
+import { EmailProviderInterface, EmailService } from "@src/services/email";
 import { Auth } from "../auth";
 
 export interface EmailRecipient {
