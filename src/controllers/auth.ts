@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { Auth } from "@src/services/auth";
-import { User, UserModel } from "@src/models/user";
-import { Password } from "@src/services/password";
+import { Auth, Password } from "@src/services";
+import { User, UserModel } from "@src/models";
 
 export type GrantType = 'password' | 'refresh_token';
 

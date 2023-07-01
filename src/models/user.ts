@@ -1,4 +1,4 @@
-import { Password } from "@src/services/password";
+import { Password } from "@src/services";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { app, server } from '@src/index';
 import { User } from '@src/models';
-import { Auth } from '@src/services/auth';
+import { Auth } from '@src/services';
 import { connection } from 'mongoose';
 
 afterAll(() => {

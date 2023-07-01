@@ -1,5 +1,5 @@
 import { EmailProviderInterface, EmailService } from "@src/services/email";
-import { Auth } from "../auth";
+import { Auth } from "@src/services/auth";
 
 export interface EmailRecipient {
   name: string;
