@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app, server } from '@src/index';
 import { User, UserModel } from '@src/models/user';
 import { Auth } from '@src/services/auth';
+import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 import { connection } from 'mongoose';
 
 afterAll(() => {
@@ -18,12 +19,16 @@ const userData = {
   refreshToken: 'refresh-token',
 };
 
+jest.mock('@src/services/signup/emailConfirmation');
+
 describe('Users', () => {
   beforeEach(async () => {
     await User.deleteMany({});
   });
 
   describe('create', () => {
+    const MockedSignupService = SignupEmailConfirmation as jest.MockedClass<typeof SignupEmailConfirmation>;
+
     const newUser = {
       firstName: 'firstName',
       lastName: 'lastName',
@@ -42,6 +47,11 @@ describe('Users', () => {
         username: 'username',
         id: expect.any(String),
       }));
+      const signupConfirmationService = MockedSignupService.mock.instances[0];
+      expect(signupConfirmationService.sendEmail).toHaveBeenCalledWith({
+        email: newUser.email,
+        name: newUser.firstName,
+      });
     });
   });
 

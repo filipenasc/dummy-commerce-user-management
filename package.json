@@ -8,9 +8,11 @@
     "build": "tsc",
     "dev": "ts-node ./src/index.ts",
     "start:dev": "npx nodemon",
-    "test": "jest --detectOpenHandles",
+    "test": "yarn test:unit && yarn test:integration --detectOpenHandles",
     "test:integration": "jest --projects ./tests --runInBand --detectOpenHandles",
-    "lint": "eslint ./src ./tests --ext .ts"
+    "test:unit": "jest --detectOpenHandles",
+    "lint": "eslint ./src ./tests --ext .ts",
+    "lint:fix": "eslint ./src ./tests --ext .ts --fix"
   },
   "keywords": [],
   "author": "",

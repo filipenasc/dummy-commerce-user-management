@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { User } from '@src/models/user';
+import { User, UserModel } from '@src/models/user';
 import { Auth } from '@src/services/auth';
+import { EmailProviderInterface, EmailService } from '@src/services/email';
+import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 
 export interface UserCredentialsRequest {
   email: string;
@@ -14,9 +16,17 @@ export interface UserCredentialsResponse {
 }
 
 export class UsersController {
+  constructor(private signupConfirmationService = new SignupEmailConfirmation()) {}
+
   public async create(request: Request, response: Response): Promise<void> {
     try {
       const user = await new User(request.body).save();
+
+      this.signupConfirmationService.sendEmail({
+        name: user.firstName,
+        email: user.email,
+      })
+
       response.status(201).send({
         firstName: user.firstName,
         lastName: user.lastName,
