@@ -1,13 +1,4 @@
-import request from 'supertest';
-import { app, server } from '@src/index';
 import { User } from '@src/models';
-import { Auth } from '@src/services';
-import { connection } from 'mongoose';
-
-afterAll(() => {
-  server.close();
-  connection.close();
-});
 
 const userData = {
   firstName: 'firstName',
@@ -17,9 +8,6 @@ const userData = {
   username: 'username',
   refreshToken: 'refresh-token',
 };
-
-jest.mock('@src/services/auth');
-const MockedAuthService = Auth as jest.Mocked<typeof Auth>;
 
 describe('OAuth', () => {
   beforeEach(async () => {
@@ -32,23 +20,22 @@ describe('OAuth', () => {
     });
 
     describe('when requesting for an access token', () => {
-      MockedAuthService.generateToken.mockReturnValueOnce('access-token').mockReturnValueOnce('refresh-token');
-
       it('returns the user credentials', async () => {
         const credentials = {
           email: 'user@example.org',
           password: 'my_password',
           grant_type: 'password'
         };
-
-        const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+        const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(200);
-        expect(body).toEqual({
-          access_token: 'access-token',
-          refresh_token: 'refresh-token',
-          token_type: 'Bearer',
-          expires_in: 86400
-        });
+        expect(body).toEqual(expect.objectContaining(
+          {
+            access_token: expect.any(String),
+            refresh_token: expect.any(String),
+            token_type: 'Bearer',
+            expires_in: 86400
+          }
+        ));
       });
 
       describe('when the user is not found', () => {
@@ -59,7 +46,7 @@ describe('OAuth', () => {
             grant_type: 'password'
           };
 
-          const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+          const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
           expect(body).toEqual({ message: "Invalid email or password." });
         });
@@ -73,7 +60,7 @@ describe('OAuth', () => {
             grant_type: 'password'
           };
 
-          const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+          const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
           expect(body).toEqual({ message: "Invalid email or password." });
         });
@@ -81,21 +68,21 @@ describe('OAuth', () => {
     });
 
     describe('when requesting for a refresh token', () => {
-      MockedAuthService.generateToken.mockReturnValueOnce('access-token').mockReturnValueOnce('refresh-token');
-
       it('returns the user credentials', async () => {
         const credentials = {
           refresh_token: 'refresh-token',
           grant_type: 'refresh_token'
         };
 
-        const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+        const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(200);
-        expect(body).toEqual({
-          access_token: 'access-token',
-          token_type: 'Bearer',
-          expires_in: 86400
-        });
+        expect(body).toEqual(expect.objectContaining(
+          {
+            access_token: expect.any(String),
+            token_type: 'Bearer',
+            expires_in: 86400
+          }
+        ));
       });
 
       describe('when the refresh_token is invalid', () => {
@@ -105,7 +92,7 @@ describe('OAuth', () => {
             grant_type: 'refresh_token'
           };
 
-          const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+          const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
           expect(body).toEqual({ message: "Invalid refresh token." });
         });
@@ -119,7 +106,7 @@ describe('OAuth', () => {
           password: 'my_password',
         };
 
-        const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+        const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(400);
         expect(body).toEqual({ message: "'grant_type' is required." });
       });
@@ -133,7 +120,7 @@ describe('OAuth', () => {
           grant_type: 'client_credentials'
         };
 
-        const { body, status } = await request(app).post('/oauth/token').type('form').send(credentials);
+        const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(400);
         expect(body).toEqual({ message: "'client_credentials' is not supported as a 'grant_type'." });
       });

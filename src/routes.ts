@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Router } from 'express';
-import { AuthController } from '@src/controllers/auth';
-import { UsersController } from '@src/controllers/users';
+import { AuthController } from '@controllers/auth';
+import { UsersController } from '@controllers/users';
 
 const router = Router();
 

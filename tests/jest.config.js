@@ -6,7 +6,7 @@ module.exports = {
   ...rootConfig, ...{
     rootDir: root,
     displayName: "integration-tests",
-    // setupFilesAfterEnv: ["<rootDir>/tests/jest-setup.ts"],
+    setupFilesAfterEnv: ["<rootDir>/tests/setup-jest.ts"],
     testMatch: ["<rootDir>/tests/**/*.test.ts"],
   }
 }

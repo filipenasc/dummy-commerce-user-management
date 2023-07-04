@@ -1,33 +1,27 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-import express from 'express';
-import cors from 'cors';
-import { router } from './routes';
-import mongoose from 'mongoose';
+import './config/module-alias';
+import { SetupExpressServer } from './server';
 
-export const app = express();
+(async (): Promise<void> => {
+  try {
+    const server = new SetupExpressServer(process.env.PORT)
+    await server.init();
+    server.start();
 
-async function setupDatabase(connection: string): Promise<void> {
-  await mongoose.connect(connection);
-}
+    const exitSignals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 
-const port = process.env.PORT || 8080;
-
-app.use(cors({
-  origin: '*'
-}));
-
-app.use(express.urlencoded({
-  extended: true
-}));
-
-setupDatabase(process.env.MONGODB_CONNECTION || 'mongodb://localhost:27017/user-management-test');
-
-app.use(express.json());
-app.use(router);
-
-export const server = app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-})
+    exitSignals.forEach(signal => process.on(signal, async () => {
+      try {
+        await server.close();
+        process.exit(0);
+      } catch (error) {
+        process.exit(1);
+      }
+    }))
+  } catch (error) {
+    console.error(`App exited with error: ${error}`);
+    process.exit(1);
+  }
+})();

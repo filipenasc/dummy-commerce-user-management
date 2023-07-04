@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { Auth, Password } from "@src/services";
-import { User, UserModel } from "@src/models";
+import { Auth } from "@src/services/auth";
+import { Password } from "@src/services/password";
+import { User } from "@src/models";
 
 export type GrantType = 'password' | 'refresh_token';
 
@@ -17,18 +18,23 @@ export interface RefreshTokenRequestParams {
 
 export class AuthController {
   public async token(req: Request, res: Response): Promise<Response> {
-    const { grant_type } = req.body;
+    try {
+      const { grant_type } = req.body;
 
-    if (!grant_type) {
-      return res.status(400).send({ message: "'grant_type' is required." });
-    }
+      if (!grant_type) {
+        return res.status(400).send({ message: "'grant_type' is required." });
+      }
 
-    if (grant_type === 'password') {
-      return this.handleAccessTokenAuth(req.body, res);
-    } else if (grant_type === 'refresh_token') {
-      return this.handleRefreshTokenAuth(req.body, res)
-    } else {
-      return res.status(400).send({ message: `'${grant_type}' is not supported as a 'grant_type'.` });
+      if (grant_type === 'password') {
+        return this.handleAccessTokenAuth(req.body, res);
+      } else if (grant_type === 'refresh_token') {
+        return this.handleRefreshTokenAuth(req.body, res)
+      } else {
+        return res.status(400).send({ message: `'${grant_type}' is not supported as a 'grant_type'.` });
+      }
+    } catch (error) {
+      console.log({ 'THIS IS THE ERROR FOUND': error })
+      return res.status(500).send({ message: 'Internal server error.' });
     }
   }
 
@@ -47,8 +53,8 @@ export class AuthController {
     }
 
     return res.status(200).send({
-      access_token: this.generateAccessToken(user),
-      refresh_token: this.generateRefreshToken(user),
+      access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
+      refresh_token: Auth.generateToken(user.toJSON()),
       token_type: 'Bearer',
       expires_in: 86400,
     })
@@ -62,18 +68,10 @@ export class AuthController {
       return res.status(401).send({ message: 'Invalid refresh token.' });
     } else {
       return res.status(200).send({
-        access_token: this.generateAccessToken(user),
+        access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
         token_type: 'Bearer',
         expires_in: 86400,
       });
     }
-  }
-
-  private generateAccessToken(user: UserModel): string {
-    return Auth.generateToken(user, { expiresIn: '86400s' });
-  }
-
-  private generateRefreshToken(user: UserModel): string {
-    return Auth.generateToken(user);
   }
 }

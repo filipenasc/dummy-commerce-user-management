@@ -1,4 +1,6 @@
-import { Auth, SignupEmailConfirmation, EmailService } from '@src/services';
+import { Auth } from '@src/services/auth';
+import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
+import { EmailService } from '@src/services/email';
 
 const name = 'User';
 const email = 'user@example.org';

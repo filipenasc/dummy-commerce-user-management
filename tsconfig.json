@@ -1,45 +1,41 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "target": "es2019",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "target": "ES6",
+    "module": "commonjs",
+    "lib": [
+      "es2019"
+    ],
+    "sourceMap": true,
+    "outDir": "dist",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
+    "resolveJsonModule": true,
     "alwaysStrict": true,
     "removeComments": true,
     "noImplicitReturns": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
-      "@test/*": [
-        "./test/*"
-      ]
+      "@src/*": ["./src/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@services/*": ["./src/services/*"],
+      "@tests/*": ["./tests/*"]
     },
     "rootDirs": [
       "./src",
-      "./test"
+      "./tests"
     ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "./src/**/*.ts",
-    "./test/**/*.ts"
+    "./tests/**/*.ts"
   ],
   "exclude": [
     "./node_modules/*",

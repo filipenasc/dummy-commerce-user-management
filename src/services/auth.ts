@@ -12,7 +12,7 @@ export class Auth {
   public static generateToken(payload: object, options?: TokenOptions): string {
     return jwt.sign(
       payload,
-      process.env.AUTH_SECRET_KEY as string,
+      process.env.AUTH_SECRET_KEY || '123456',
       {
         ...(options?.expiresIn && { expiresIn: options.expiresIn }),
       }
@@ -20,6 +20,6 @@ export class Auth {
   }
 
   public static decodeToken(token: string): DecodedToken {
-    return jwt.verify(token, process.env.AUTH_SECRET_KEY as string) as DecodedToken;
+    return jwt.verify(token, process.env.AUTH_SECRET_KEY || '123456') as DecodedToken;
   }
 }
