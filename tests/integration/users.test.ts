@@ -3,15 +3,6 @@ import { User } from '@src/models';
 import { Auth } from '@services/auth';
 import { SignupEmailConfirmation } from '@services/signup/emailConfirmation';
 
-const userData = {
-  firstName: 'firstName',
-  lastName: 'lastName',
-  email: 'user@example.org',
-  password: 'password',
-  username: 'username',
-  refreshToken: 'refresh-token',
-};
-
 describe('Users', () => {
   beforeEach(async () => {
     await User.deleteMany({});
@@ -45,17 +36,26 @@ describe('Users', () => {
   });
 
   describe('confirm registration', () => {
+    const email = 'user@example.org'
+
     beforeEach(async () => {
-      await new User(userData).save();
+      await new User({
+        email,
+        firstName: 'firstName',
+        lastName: 'lastName',
+        password: 'password',
+        username: 'username',
+        refreshToken: 'refresh-token',
+      }).save();
     });
 
     describe('when the confirmation code is valid', () => {
       it('returns success', async () => {
-        const confirmationCode = await Auth.generateToken({ email: userData.email }, { expiresIn: '1h' });
+        const confirmationCode = await Auth.generateToken({ email }, { expiresIn: '1h' });
         const { status, body } = await global.testRequest.post(`/users/confirm-registration/${confirmationCode}`).send();
         expect(status).toEqual(200);
         expect(body).toEqual({ message: 'Your email has been successfully confirmed!' });
-        const user = await User.findOne({ email: userData.email });
+        const user = await User.findOne({ email });
         expect(user?.confirmedAt).toBeTruthy();
       });
     });

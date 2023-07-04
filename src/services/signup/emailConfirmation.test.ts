@@ -1,12 +1,12 @@
-import { Auth } from '@src/services/auth';
-import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
-import { EmailService } from '@src/services/email';
+import { Auth } from '@services/auth';
+import { SignupEmailConfirmation } from '@services/signup/emailConfirmation';
+import { EmailService } from '@services/email';
 
 const name = 'User';
 const email = 'user@example.org';
 
-jest.mock('@src/services/email');
-jest.mock('@src/services/auth');
+jest.mock('@services/email');
+jest.mock('@services/auth');
 
 describe('SignupEmailConfirmation', () => {
   const emailService = new EmailService as jest.Mocked<EmailService>;
