@@ -14,7 +14,6 @@ describe('Users', () => {
       lastName: 'lastName',
       email: 'user@example.org',
       password: 'password',
-      username: 'username',
     };
 
     it('returns the created user with a 201 status', async () => {
@@ -25,7 +24,6 @@ describe('Users', () => {
         firstName: 'firstName',
         lastName: 'lastName',
         email: 'user@example.org',
-        username: 'username',
         id: expect.any(String),
       }));
       expect(signupEmailConfirmation).toHaveBeenCalledWith({
@@ -44,7 +42,6 @@ describe('Users', () => {
         firstName: 'firstName',
         lastName: 'lastName',
         password: 'password',
-        username: 'username',
         refreshToken: 'refresh-token',
       }).save();
     });

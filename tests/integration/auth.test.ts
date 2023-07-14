@@ -5,7 +5,6 @@ const userData = {
   lastName: 'lastName',
   email: 'user@example.org',
   password: 'my_password',
-  username: 'username',
   refreshToken: 'refresh-token',
 };
 

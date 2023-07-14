@@ -9,7 +9,6 @@ export interface UserModel {
   lastName: string;
   email: string;
   password: string;
-  username: string;
   confirmedAt?: Date;
   refreshToken?: string;
 }
@@ -18,9 +17,8 @@ const schema = new Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    username: { type: String, required: true },
     confirmedAt: { type: Date, required: false },
     refreshToken: { type: String, required: false },
   },
@@ -34,6 +32,10 @@ const schema = new Schema(
     },
   }
 );
+
+schema.path('email').validate(async (email: string) => {
+  return await mongoose.models.User.countDocuments({ email });
+}, 'already exists in the database.', 'duplicated');
 
 schema.pre('save', async function (): Promise<void> {
   try {

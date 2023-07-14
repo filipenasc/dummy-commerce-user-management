@@ -2,20 +2,12 @@ import { Request, Response } from 'express';
 import { User } from '@src/models';
 import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 import { Auth } from '@src/services/auth';
+import { BaseController } from './base';
 
-export interface UserCredentialsRequest {
-  email: string;
-  password: string;
-}
-
-export interface UserCredentialsResponse {
-  email: string;
-  accessToken: string;
-  refreshToken: string;
-}
-
-export class UsersController {
-  constructor(private signupConfirmationService = new SignupEmailConfirmation()) {}
+export class UsersController extends BaseController {
+  constructor(private signupConfirmationService = new SignupEmailConfirmation()) {
+    super()
+  }
 
   public async create(request: Request, response: Response): Promise<void> {
     try {
@@ -30,12 +22,10 @@ export class UsersController {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        username: user.username,
         id: user.id,
       });
     } catch (error) {
-      console.error(error);
-      response.status(500).send({ message: 'Unexpected Error' })
+      this.sendErrorResponse(response, error as Error);
     }
   }
 
