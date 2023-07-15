@@ -3,7 +3,7 @@ import { User } from '@src/models';
 import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
 import { Auth, DecodedToken } from '@src/services/auth';
 import { BaseController } from './base';
-import { InvalidConfirmationCodeError } from '@src/lib/errors';
+import { AuthError } from '@src/lib/errors';
 
 export class UsersController extends BaseController {
   constructor(private signupConfirmationService = new SignupEmailConfirmation()) {
@@ -41,7 +41,7 @@ export class UsersController extends BaseController {
       const { email } = decodedToken;
 
       if (!email) {
-        throw new InvalidConfirmationCodeError('Confirmation code invalid or expired.');
+        throw new AuthError('Confirmation code invalid or expired.');
       }
 
       const user = await User.findOne({ email: decodedToken.email });
@@ -62,7 +62,7 @@ export class UsersController extends BaseController {
     try {
       return Auth.decodeToken(code);
     } catch (error) {
-      throw new InvalidConfirmationCodeError('Confirmation code invalid or expired.');
+      throw new AuthError('Confirmation code invalid or expired.');
     }
   }
 }

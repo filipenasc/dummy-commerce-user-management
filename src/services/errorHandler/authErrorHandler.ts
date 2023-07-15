@@ -1,8 +1,8 @@
 import { ErrorHandler } from ".";
-import { ErrorResponse, ErrorType, InvalidConfirmationCodeError } from "@src/lib/errors";
+import { ErrorResponse, ErrorType, AuthError } from "@src/lib/errors";
 
 export class AuthErrorHandler extends ErrorHandler {
-  constructor(private error: InvalidConfirmationCodeError) {
+  constructor(private error: AuthError) {
     super();
   }
 

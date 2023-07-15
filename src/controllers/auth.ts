@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Auth } from "@src/services/auth";
 import { Password } from "@src/services/password";
 import { User } from "@src/models";
+import { BaseController } from "./base";
+import { AuthError, InvalidParameterError } from "@src/lib/errors";
 
 export type GrantType = 'password' | 'refresh_token';
 
@@ -16,62 +18,70 @@ export interface RefreshTokenRequestParams {
   grant_type: GrantType;
 }
 
-export class AuthController {
-  public async token(req: Request, res: Response): Promise<Response> {
+export interface TokenResponse {
+  access_token: string
+  refresh_token?: string
+  token_type: string
+  expires_in: number
+}
+
+export class AuthController extends BaseController {
+  public async token(req: Request, res: Response): Promise<void> {
     try {
       const { grant_type } = req.body;
 
       if (!grant_type) {
-        return res.status(400).send({ message: "'grant_type' is required." });
+        throw new InvalidParameterError('grant_type', 'required');
       }
 
+      let body;
+
       if (grant_type === 'password') {
-        return this.handleAccessTokenAuth(req.body, res);
+        body = await this.handleAccessTokenAuth(req.body);
       } else if (grant_type === 'refresh_token') {
-        return this.handleRefreshTokenAuth(req.body, res)
+        body = await this.handleRefreshTokenAuth(req.body)
       } else {
-        return res.status(400).send({ message: `'${grant_type}' is not supported as a 'grant_type'.` });
+        throw new InvalidParameterError('grant_type', 'not_supported')
       }
+
+      res.status(200).send(body)
     } catch (error) {
-      console.log({ 'THIS IS THE ERROR FOUND': error })
-      return res.status(500).send({ message: 'Internal server error.' });
+      this.sendErrorResponse(res, error as Error);
     }
   }
 
-  private async handleAccessTokenAuth(params: AccessTokenRequestParams, res: Response): Promise<Response> {
+  private async handleAccessTokenAuth(params: AccessTokenRequestParams): Promise<TokenResponse> {
     const { email, password } = params;
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).send({ message: 'Invalid email or password.' });
+      throw new AuthError('Invalid email or password.');
     }
 
     const validPassword = await Password.compare(password as string, user.password);
 
     if (!validPassword) {
-      return res.status(401).send({ message: 'Invalid email or password.' });
+      throw new AuthError('Invalid email or password.');
     }
 
-    return res.status(200).send({
+    return {
       access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
       refresh_token: Auth.generateToken(user.toJSON()),
       token_type: 'Bearer',
       expires_in: 86400,
-    })
+    }
   }
 
-  private async handleRefreshTokenAuth(params: RefreshTokenRequestParams, res: Response): Promise<Response> {
+  private async handleRefreshTokenAuth(params: RefreshTokenRequestParams): Promise<TokenResponse> {
     const { refresh_token: refreshToken } = params;
     const user = await User.findOne({ refreshToken });
 
-    if (!user) {
-      return res.status(401).send({ message: 'Invalid refresh token.' });
-    } else {
-      return res.status(200).send({
-        access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
-        token_type: 'Bearer',
-        expires_in: 86400,
-      });
-    }
+    if (!user) throw new AuthError('Invalid refresh token.');
+
+    return {
+      access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
+      token_type: 'Bearer',
+      expires_in: 86400,
+    };
   }
 }

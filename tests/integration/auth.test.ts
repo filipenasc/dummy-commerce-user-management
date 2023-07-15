@@ -47,7 +47,10 @@ describe('OAuth', () => {
 
           const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
-          expect(body).toEqual({ message: "Invalid email or password." });
+          expect(body).toEqual({
+            type: 'AUTH_ERROR',
+            message: 'Invalid email or password.',
+          });
         });
       });
 
@@ -61,7 +64,10 @@ describe('OAuth', () => {
 
           const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
-          expect(body).toEqual({ message: "Invalid email or password." });
+          expect(body).toEqual({
+            type: 'AUTH_ERROR',
+            message: 'Invalid email or password.',
+          });
         });
       });
     });
@@ -93,7 +99,10 @@ describe('OAuth', () => {
 
           const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
           expect(status).toEqual(401);
-          expect(body).toEqual({ message: "Invalid refresh token." });
+          expect(body).toEqual({
+            type: 'AUTH_ERROR',
+            message: 'Invalid refresh token.',
+          });
         });
       });
     });
@@ -107,7 +116,16 @@ describe('OAuth', () => {
 
         const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(400);
-        expect(body).toEqual({ message: "'grant_type' is required." });
+        expect(body).toEqual({
+          type: 'VALIDATION_ERROR',
+          message: 'Invalid parameters.',
+          errors: [
+            {
+              path: 'grant_type',
+              type: 'required',
+            }
+          ]
+        });
       });
     });
 
@@ -121,7 +139,16 @@ describe('OAuth', () => {
 
         const { body, status } = await global.testRequest.post('/oauth/token').type('form').send(credentials);
         expect(status).toEqual(400);
-        expect(body).toEqual({ message: "'client_credentials' is not supported as a 'grant_type'." });
+        expect(body).toEqual({
+          type: 'VALIDATION_ERROR',
+          message: 'Invalid parameters.',
+          errors: [
+            {
+              path: 'grant_type',
+              type: 'not_supported',
+            }
+          ]
+        });
       });
     });
   });
