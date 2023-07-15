@@ -4,9 +4,20 @@ export enum ErrorType {
   SERVER_ERROR = 'SERVER_ERROR',
 }
 
-export interface Error {
+interface BaseErrorResponseBody {
   type: ErrorType
   message: string
+}
+
+interface ValidationErrorResponseBody extends BaseErrorResponseBody {
+  errors: ValidationError[]
+}
+
+export type ErrorResponseBody = BaseErrorResponseBody | ValidationErrorResponseBody;
+
+export interface ErrorResponse {
+  statusCode: number
+  body: ErrorResponseBody
 }
 
 export interface ValidationError {
@@ -14,6 +25,4 @@ export interface ValidationError {
   type: string
 }
 
-export interface ValidationErrorResponse extends Error {
-  errors: ValidationError[]
-}
+export class InvalidConfirmationCodeError extends Error {}

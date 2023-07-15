@@ -1,37 +1,25 @@
-import { ErrorType, ValidationError, ValidationErrorResponse } from "@src/lib/errors";
+import { InvalidConfirmationCodeError } from "@src/lib/errors";
+import { ErrorHandler } from "@src/services/errorHandler";
+import { AuthErrorHandler } from "@src/services/errorHandler/authErrorHandler";
+import { MongooseErrorHandler } from "@src/services/errorHandler/mongooseErrorHandler";
+import { ServerErrorHandler } from "@src/services/errorHandler/serverErrorHandler";
 import { Response } from "express";
 import mongoose from "mongoose";
 
-// Consider using composition for error handling
 export abstract class BaseController {
   protected sendErrorResponse(res: Response, error: Error): void {
+    const errorResponse = this.createErrorHandler(error).handle();
+    res.status(errorResponse.statusCode).send(errorResponse.body);
+  }
+
+  private createErrorHandler(error: Error): ErrorHandler {
     if (error instanceof mongoose.Error.ValidationError) {
-      this.handleMongooseErrors(res, error);
+      return new MongooseErrorHandler(error);
+    } else if (error instanceof InvalidConfirmationCodeError) {
+      // @todo: create a type for auth errors
+      return new AuthErrorHandler(error);
     } else {
-      this.handleInternalServerErrors(res);
+      return new ServerErrorHandler();
     }
-  }
-
-  private handleMongooseErrors(res: Response, error: Error): void {
-    const validationErrors: ValidationError[] = this.buildMongooseValidationErrors(error);
-    const fieldErrors: ValidationErrorResponse = {
-      type: ErrorType.VALIDATION_ERROR,
-      message: 'Validation failed.',
-      errors: validationErrors
-    }
-    res.status(400).send(fieldErrors)
-  }
-
-  private handleInternalServerErrors(res: Response): void {
-    res.status(500).send({ message: 'Unexpected Error' });
-  }
-
-  private buildMongooseValidationErrors(error: mongoose.Error.ValidationError): ValidationError[] {
-    return Object.values(error.errors).map(err => {
-      return {
-        path: err.path,
-        type: err.kind,
-      }
-    });
   }
 }
