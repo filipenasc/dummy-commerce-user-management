@@ -62,7 +62,7 @@ describe('Users', () => {
         const confirmationCode = '123456';
         const { status, body } = await global.testRequest.post(`/users/confirm-registration/${confirmationCode}`).send();
         expect(status).toEqual(401);
-        expect(body).toEqual({ message: 'Confirmation code invalid or expired.' });
+        expect(body).toEqual({ message: 'Confirmation code invalid or expired.', type: 'AUTH_ERROR' });
       });
     });
   });

@@ -34,7 +34,8 @@ const schema = new Schema(
 );
 
 schema.path('email').validate(async (email: string) => {
-  return await mongoose.models.User.countDocuments({ email });
+  const userCount = await mongoose.models.User.countDocuments({ email });
+  return !userCount;
 }, 'already exists in the database.', 'duplicated');
 
 schema.pre('save', async function (): Promise<void> {
