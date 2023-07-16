@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from '@src/models';
 import { SignupEmailConfirmation } from '@src/services/signup/emailConfirmation';
-import { Auth, DecodedToken } from '@src/services/auth';
+import { DecodedToken, JWTToken } from '@src/services/jwt-token';
 import { BaseController } from './base';
 import { AuthError } from '@src/lib/errors';
 
@@ -60,7 +60,7 @@ export class UsersController extends BaseController {
 
   private decodeConfirmationCode(code: string): DecodedToken {
     try {
-      return Auth.decodeToken(code);
+      return JWTToken.decode(code);
     } catch (error) {
       throw new AuthError('Confirmation code invalid or expired.');
     }

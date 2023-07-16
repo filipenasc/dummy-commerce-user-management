@@ -1,5 +1,5 @@
 import { EmailProviderInterface, EmailService } from "@services/email";
-import { Auth } from "@services/auth";
+import { JWTToken } from "@src/services/jwt-token";
 
 export interface EmailRecipient {
   name: string;
@@ -17,7 +17,7 @@ export class SignupEmailConfirmation {
   public async sendEmail(recipient: EmailRecipient): Promise<void> {
     const { email, name } = recipient;
 
-    const confirmationCode = Auth.generateToken({ email }, { expiresIn: '1h' });
+    const confirmationCode = JWTToken.generate({ email }, { expiresIn: '1h' });
 
     this.emailService.sendEmail({
       to: { name, email },

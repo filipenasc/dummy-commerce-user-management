@@ -8,8 +8,8 @@ export interface DecodedToken extends JwtPayload {
   email: string;
 }
 
-export class Auth {
-  public static generateToken(payload: object, options?: TokenOptions): string {
+export class JWTToken {
+  public static generate(payload: object, options?: TokenOptions): string {
     return jwt.sign(
       payload,
       process.env.AUTH_SECRET_KEY || '123456',
@@ -19,7 +19,7 @@ export class Auth {
     );
   }
 
-  public static decodeToken(token: string): DecodedToken {
+  public static decode(token: string): DecodedToken {
     return jwt.verify(token, process.env.AUTH_SECRET_KEY || '123456') as DecodedToken;
   }
 }

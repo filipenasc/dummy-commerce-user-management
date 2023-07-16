@@ -1,19 +1,19 @@
-import { Auth } from '@services/auth';
 import { SignupEmailConfirmation } from '@services/signup/emailConfirmation';
 import { EmailService } from '@services/email';
+import { JWTToken } from '../jwt-token';
 
 const name = 'User';
 const email = 'user@example.org';
 
 jest.mock('@services/email');
-jest.mock('@services/auth');
+jest.mock('@services/jwt-token');
 
 describe('SignupEmailConfirmation', () => {
   const emailService = new EmailService as jest.Mocked<EmailService>;
-  const authService = Auth as jest.Mocked<typeof Auth>;
+  const authService = JWTToken as jest.Mocked<typeof JWTToken>;
 
   const confirmationCode = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJpYXQiOjE2ODgyMTkwMDYsImV4cCI6MTY4ODIyMjYwNn0.uQlsun_bjEmqTUJ5nTquvh4fqlz2aVWBVXVwuRE42PI`;
-  authService.generateToken.mockReturnValue(confirmationCode);
+  authService.generate.mockReturnValue(confirmationCode);
 
   it('calls the email service with the correct arguments', async () => {
     const emailConfirmationService = new SignupEmailConfirmation(emailService);

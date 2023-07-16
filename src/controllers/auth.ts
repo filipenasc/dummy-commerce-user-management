@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Auth } from "@src/services/auth";
+import { JWTToken } from "@src/services/jwt-token";
 import { Password } from "@src/services/password";
 import { User } from "@src/models";
 import { BaseController } from "./base";
@@ -65,8 +65,8 @@ export class AuthController extends BaseController {
     }
 
     return {
-      access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
-      refresh_token: Auth.generateToken(user.toJSON()),
+      access_token: JWTToken.generate(user.toJSON(), { expiresIn: '86400s' }),
+      refresh_token: JWTToken.generate(user.toJSON()),
       token_type: 'Bearer',
       expires_in: 86400,
     }
@@ -79,7 +79,7 @@ export class AuthController extends BaseController {
     if (!user) throw new AuthError('Invalid refresh token.');
 
     return {
-      access_token: Auth.generateToken(user.toJSON(), { expiresIn: '86400s' }),
+      access_token: JWTToken.generate(user.toJSON(), { expiresIn: '86400s' }),
       token_type: 'Bearer',
       expires_in: 86400,
     };

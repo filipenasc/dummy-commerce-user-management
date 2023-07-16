@@ -1,6 +1,6 @@
 import { expect, jest } from '@jest/globals';
 import { User } from '@src/models';
-import { Auth } from '@services/auth';
+import { JWTToken } from '@src/services/jwt-token';
 import { SignupEmailConfirmation } from '@services/signup/emailConfirmation';
 
 describe('Users', () => {
@@ -48,7 +48,7 @@ describe('Users', () => {
 
     describe('when the confirmation code is valid', () => {
       it('returns success', async () => {
-        const confirmationCode = await Auth.generateToken({ email }, { expiresIn: '1h' });
+        const confirmationCode = await JWTToken.generate({ email }, { expiresIn: '1h' });
         const { status, body } = await global.testRequest.post(`/users/confirm-registration/${confirmationCode}`).send();
         expect(status).toEqual(200);
         expect(body).toEqual({ message: 'Your email has been successfully confirmed!' });
