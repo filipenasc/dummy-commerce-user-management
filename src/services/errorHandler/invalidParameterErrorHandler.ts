@@ -1,5 +1,6 @@
+import { ErrorResponse, ErrorType } from "@src/lib/errors/types";
 import { ErrorHandler } from ".";
-import { ErrorResponse, ErrorType, InvalidParameterError } from "@src/lib/errors";
+import { InvalidParameterError } from "@src/lib/errors";
 
 export class InvalidParameterErrorHandler extends ErrorHandler {
   constructor(private error: InvalidParameterError) {

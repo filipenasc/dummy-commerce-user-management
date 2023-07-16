@@ -1,5 +1,5 @@
+import { ErrorResponse, ErrorType } from "@src/lib/errors/types";
 import { ErrorHandler } from ".";
-import { ErrorResponse, ErrorType } from "@src/lib/errors";
 
 export class ServerErrorHandler extends ErrorHandler {
   constructor() {

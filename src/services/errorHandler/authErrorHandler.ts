@@ -1,5 +1,6 @@
+import { ErrorResponse, ErrorType } from "@src/lib/errors/types";
 import { ErrorHandler } from ".";
-import { ErrorResponse, ErrorType, AuthError } from "@src/lib/errors";
+import { AuthError } from "@src/lib/errors";
 
 export class AuthErrorHandler extends ErrorHandler {
   constructor(private error: AuthError) {

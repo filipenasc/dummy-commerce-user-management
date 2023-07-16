@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ErrorHandler } from ".";
-import { ErrorResponse, ErrorType, ValidationError } from "@src/lib/errors";
+import { ErrorResponse, ErrorType, ValidationError } from "@src/lib/errors/types";
 
 export class MongooseErrorHandler extends ErrorHandler {
   constructor(private error: mongoose.Error.ValidationError) {

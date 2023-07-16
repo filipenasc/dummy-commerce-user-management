@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@src/lib/errors";
+import { ErrorResponse } from "@src/lib/errors/types";
 
 export interface ErrorHandlerStrategy {
   handle: () => ErrorResponse
